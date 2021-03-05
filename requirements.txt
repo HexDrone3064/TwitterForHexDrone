@@ -1,6 +1,6 @@
 certifi==2020.12.5
 chardet==4.0.0
-hex-drone-optimized-speech-3064==2.0.0
+-e git+https://github.com/HexDrone3064/HexDroneSpeechOptimization.git#egg=hex_drone_optimized_speech_3064-2.0.0
 idna==2.10
 oauthlib==3.1.0
 PySocks==1.7.1
