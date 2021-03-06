@@ -69,12 +69,22 @@ class DroneResponsePattern(ResponsePattern):
     
     @RequestEvent.ON_UNREGISTERED
     def on_unregister(self, request: OptimizedSpeech):
-        codes = ['410', '418', '426']
-        return self._build(choice(codes))
+        return [
+            self._build(choice(['410', '418', '426'])),
+            None,
+            self._build('056',
+                        f'Code {request.status_code} is not registered.',
+                        'Code ' + ','.join(sorted(self.registered_status_codes)) + ' are acceptable.'),
+        ]
     
     @RequestEvent.ON_INVALID
     def on_invalid(self, request: str):
-        return self._build('400')
+        return [
+            self._build('400'),
+            None,
+            self._build('056', 'Code ' + ','.join(sorted(self.registered_status_codes)) + ' are acceptable.'),
+            self._build('056', 'e.g. 1111 :: Code 054 :: Cleanup.'),
+        ]
     
     @RequestEvent.ON_ERROR
     def on_error(self, exception: BaseException):
@@ -83,3 +93,9 @@ class DroneResponsePattern(ResponsePattern):
     def __call__(self, request: Union[str, OptimizedSpeech], **kwargs):
         results = super().__call__(request, **kwargs)
         return join(results)
+
+
+if __name__ == '__main__':
+    pattern = DroneResponsePattern('3064')
+    while True:
+        print(pattern(input('$ ')))
